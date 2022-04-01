@@ -1,24 +1,16 @@
-var db = require('../models/stock');
+var stockModel = require('../models/stock');
 const { quote } = require('yahoo-finance');
 
-async function getYahooData(req, res) {
-    try {
-        const result = await quote('TSLA', ['price', 'summaryDetail']);
-        const data = new db.stockModel(req.body);
-        console.log(result.data);
-        res.json({
-            status: 'success',
-            currentPrice: result.price.regularMarketPrice,
-            low52Weeks: result.summaryDetail.fiftyTwoWeekLow,
-            high52Weeks: result.summaryDetail.fiftyTwoWeekHigh,
-            fullName: result.price.longName,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ status: 'failed', error: err });
+async function getYahooData() {
+    const stockList = await stockModel.find({});
+
+    for (let stock of stockList) {
+        const result = await quote(stock.code, ['price', 'summaryDetail']);
+        stock.currentPrice = result.price.regularMarketPrice,
+            stock.low52Weeks = result.summaryDetail.fiftyTwoWeekLow,
+            stock.high52Weeks = result.summaryDetail.fiftyTwoWeekHigh,
+            await stock.save()
     }
 }
 
-var getData = setInterval(getYahooData, 60000);
-
-exports.module = getData;
+setInterval(getYahooData, 300000);

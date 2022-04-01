@@ -5,7 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('./utils/mongo-connection');
-// require('./utils/getLatestStockInfo');
+require('./utils/getLatestStockInfo');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user-router');

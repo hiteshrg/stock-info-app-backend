@@ -108,7 +108,7 @@ exports.getYahooData = async (req, res) => {
 
 exports.getAllPurchasedStockDetails = async (req, res) => {
     try {
-        const data = await db.buyModel.find({});
+        const data = await db.buyModel.find({}).where({ userId: req.body.userId });
         let uniqueStock = [];
         let formattedStock = [];
 
@@ -154,3 +154,15 @@ exports.getAllPurchasedStockDetails = async (req, res) => {
         res.status(500).json({ status: 'failed', error: err });
     }
 }
+
+// exports.getStocksByUserId = async (req, res) => {
+//     try {
+//         console.log(req.body)
+//         const data = await db.buyModel.find({}).where({ userId: req.body.userId });
+//         const count = await db.buyModel.find({}).count();
+//         res.status(200).json({ totalRecord: count, data: data });
+//     } catch (err) {
+//         res.status(500).json(err);
+//     }
+
+// }
